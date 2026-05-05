@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 
-const LOGO_SRC = "/src/assets/images/P.png";
+const LOGO_SRC = "P.png";
 
 export function LoadingScreen({ onComplete, ready }: { onComplete: () => void; ready: boolean; key?: string }) {
   const [progress, setProgress] = useState(0);
