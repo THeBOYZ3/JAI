@@ -90,7 +90,7 @@ export const AudioPlayer: React.FC<{ onReady?: () => void; loading?: boolean }> 
               className="relative w-14 h-14 md:w-20 md:h-20 rounded-full border border-white/20 overflow-hidden cursor-pointer bg-white/5 backdrop-blur-sm shadow-2xl z-20 flex-shrink-0"
             >
               <img 
-                src="/src/assets/images/regenerated_image_1777951842163.png" 
+                src="/ai-project-web/P.png" 
                 alt="Logo" 
                 className="w-full h-full object-cover text-white text-[8px] text-center"
                 referrerPolicy="no-referrer"

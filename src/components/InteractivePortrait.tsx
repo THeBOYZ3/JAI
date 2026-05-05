@@ -66,7 +66,7 @@ export function InteractivePortrait() {
       {/* Grayscale Transition Image */}
       <div className="absolute inset-0">
         <motion.img 
-          src="/src/assets/images/regenerated_image_1777951842163.png" 
+          src="/ai-project-web/P.png" 
           alt="Jai Portrait" 
           animate={{ 
             filter: isHovered ? "grayscale(0%) brightness(1) contrast(1.1)" : "grayscale(100%) brightness(0.75) contrast(1)",
