@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Barlow:wght@300;400;500;600&family=Syne:wght@700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-heading: "Instrument Serif", serif;
+  --font-display: "Syne", sans-serif;
+  --font-body: "Barlow", sans-serif;
+  
+  --color-background: #050505;
+  --color-foreground: #ffffff;
+  --color-card: #0c0c0f;
+  --color-primary: #ffffff;
+  --color-secondary: #26262b;
+  --color-muted: #1a1a1f;
+  --color-muted-foreground: rgba(255, 255, 255, 0.6);
+  --color-accent: #33333b;
+  --color-border: rgba(255, 255, 255, 0.1);
+  
+  --radius-lg: 1rem;
+  --radius-md: calc(1rem - 2px);
+  --radius-sm: calc(1rem - 4px);
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased font-body;
+  }
+
+  .font-heading {
+    font-family: var(--font-heading);
+    font-style: italic;
+  }
+}
+
+@layer utilities {
+  .liquid-glass {
+    @apply relative overflow-hidden backdrop-blur-xl bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.12)] shadow-[inset_0_2px_10px_rgba(255,255,255,0.05)];
+  }
+
+  .liquid-glass::before {
+    content: "";
+    @apply absolute inset-0 pointer-events-none opacity-30;
+    background: linear-gradient(135deg, rgba(200, 230, 255, 0.3) 0%, transparent 50%, rgba(255, 255, 255, 0.05) 100%);
+  }
+}
