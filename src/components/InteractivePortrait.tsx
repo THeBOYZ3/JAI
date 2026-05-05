@@ -18,7 +18,7 @@ export function InteractivePortrait() {
     if (!isHovered) return;
 
     const id = Date.now();
-    const contents = ["🖤", "——@"];
+    const contents = ["🖤", "😘"];
     const content = contents[Math.floor(Math.random() * contents.length)];
 
     setStickers((prev) => [
@@ -66,7 +66,7 @@ export function InteractivePortrait() {
       {/* Grayscale Transition Image */}
       <div className="absolute inset-0">
         <motion.img 
-          src="/src/assets/images/P.png" 
+          src="P.png" 
           alt="Jai Portrait" 
           animate={{ 
             filter: isHovered ? "grayscale(0%) brightness(1) contrast(1.1)" : "grayscale(100%) brightness(0.75) contrast(1)",
