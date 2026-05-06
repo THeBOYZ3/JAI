@@ -50,7 +50,15 @@ const CrazyMovingText: React.FC<CrazyMovingTextProps> = ({ text, className, dela
               }
             }
           }}
-          className="inline-block cursor-default select-none whitespace-pre"
+          whileTap={{
+            scale: 1.1,
+            rotate: [
+              Math.random() * 40 - 20,
+              Math.random() * 40 - 20
+            ],
+            transition: { duration: 0.2 }
+          }}
+          className="inline-block cursor-default select-none whitespace-pre touch-none"
           style={{ willChange: "transform, opacity" }}
         >
           {char}

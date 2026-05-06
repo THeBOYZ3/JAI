@@ -1,14 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Play, Square, RotateCcw } from 'lucide-react';
+import { EmojiRain } from './EmojiRain';
 
 const AUDIO_URL = "https://raw.githubusercontent.com/THeBOYZ3/jai-project-assets/refs/heads/main/YTDown_YouTube_Skate-Avenue-PH-I-Knew-I-Loved-You-Rock-_Media_yRrpQ5Sh5n8_009_128k.mp3";
 
 export const AudioPlayer: React.FC<{ onReady?: () => void; loading?: boolean }> = ({ onReady, loading }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showControls, setShowControls] = useState(false);
+  const [isPlayingEffect, setIsPlayingEffect] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const effectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -16,23 +19,36 @@ export const AudioPlayer: React.FC<{ onReady?: () => void; loading?: boolean }> 
     }
   }, []);
 
+  const triggerEffects = () => {
+    setIsPlayingEffect(true);
+    if (effectTimeoutRef.current) clearTimeout(effectTimeoutRef.current);
+    effectTimeoutRef.current = setTimeout(() => {
+      setIsPlayingEffect(false);
+    }, 5000);
+  };
+
   const handleCanPlayThrough = () => {
     if (onReady) onReady();
   };
 
-  const togglePlay = () => {
+  const togglePlay = async () => {
     if (!audioRef.current) return;
     
     setError(null);
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play().catch(e => {
-        console.error("Audio playback error:", e instanceof Error ? e.message : "Unknown error");
-        setError("Playback blocked. Use the controls to start manually.");
-      });
+    try {
+      if (isPlaying) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        await audioRef.current.play();
+        setIsPlaying(true);
+        triggerEffects();
+      }
+    } catch (e) {
+      console.error("Audio playback error:", e instanceof Error ? e.message : "Unknown error");
+      setError("Playback blocked. Please try clicking Play again.");
+      setIsPlaying(false);
     }
-    setIsPlaying(!isPlaying);
   };
 
   const stopAudio = () => {
@@ -40,18 +56,22 @@ export const AudioPlayer: React.FC<{ onReady?: () => void; loading?: boolean }> 
     audioRef.current.pause();
     audioRef.current.currentTime = 0;
     setIsPlaying(false);
+    setIsPlayingEffect(false);
     setError(null);
   };
 
-  const restartAudio = () => {
+  const restartAudio = async () => {
     if (!audioRef.current) return;
     setError(null);
-    audioRef.current.currentTime = 0;
-    audioRef.current.play().catch(e => {
+    try {
+      audioRef.current.currentTime = 0;
+      await audioRef.current.play();
+      setIsPlaying(true);
+      triggerEffects();
+    } catch (e) {
       console.error("Audio playback error:", e instanceof Error ? e.message : "Unknown error");
       setError("Failed to restart audio.");
-    });
-    setIsPlaying(true);
+    }
   };
 
   const handleAudioError = () => {
@@ -66,10 +86,14 @@ export const AudioPlayer: React.FC<{ onReady?: () => void; loading?: boolean }> 
         ref={audioRef} 
         src={AUDIO_URL} 
         loop 
-        preload="metadata"
+        preload="auto"
+        playsInline
+        crossOrigin="anonymous"
         onCanPlayThrough={handleCanPlayThrough}
         onError={handleAudioError}
       />
+
+      <EmojiRain active={isPlayingEffect} />
       
       <AnimatePresence>
         {!loading && (
@@ -82,10 +106,14 @@ export const AudioPlayer: React.FC<{ onReady?: () => void; loading?: boolean }> 
           >
             {/* TRIGGER LOGO (Centered) */}
             <motion.div
-              whileHover={{ scale: 1.1, rotate: 10 }}
+              whileHover={{ scale: 1.1, rotate: isPlayingEffect ? 0 : 10 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowControls(!showControls)}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              animate={isPlayingEffect ? { rotate: 360 } : { rotate: 0 }}
+              transition={isPlayingEffect ? { 
+                rotate: { duration: 3, repeat: Infinity, ease: "linear" },
+                type: "spring", stiffness: 300, damping: 20 
+              } : { type: "spring", stiffness: 300, damping: 20 }}
               style={{ willChange: "transform, opacity" }}
               className="relative w-14 h-14 md:w-20 md:h-20 rounded-full border border-white/20 overflow-hidden cursor-pointer bg-white/5 backdrop-blur-sm shadow-2xl z-20 flex-shrink-0"
             >
@@ -103,6 +131,22 @@ export const AudioPlayer: React.FC<{ onReady?: () => void; loading?: boolean }> 
                 />
               )}
             </motion.div>
+
+            {/* LOVE EXPRESSION OVERLAY */}
+            <AnimatePresence>
+              {isPlayingEffect && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.8 }}
+                  className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap px-4 py-1.5 bg-black/60 backdrop-blur-md rounded-full border border-white/10 shadow-xl"
+                >
+                  <span className="text-[10px] md:text-xs font-medium uppercase tracking-[0.2em] text-white/90">
+                    Made with Love ❤️
+                  </span>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* CONTROLS PANEL (Floating Side Panel) */}
             <AnimatePresence>

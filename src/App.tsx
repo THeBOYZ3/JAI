@@ -5,6 +5,7 @@ import { LoadingScreen } from "./components/LoadingScreen";
 import CrazyMovingText from "./components/CrazyMovingText";
 import { AudioPlayer } from "./components/AudioPlayer";
 import { InteractivePortrait } from "./components/InteractivePortrait";
+import { ProgressDrawer } from "./components/ProgressDrawer";
 import { useState } from "react";
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
 
   return (
     <>
+      <ProgressDrawer />
       <AnimatePresence mode="wait">
         {loading && (
           <LoadingScreen 
