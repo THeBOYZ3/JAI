@@ -178,14 +178,12 @@ export default function ProgressDrawer({ isOpen, setIsOpen }: ProgressDrawerProp
                       <item.icon size={isMobile ? 24 : 32} strokeWidth={1} className="relative z-10" />
                     </motion.div>
                     
-                    {/* Tooltip Label (Desktop only) */}
-                    {!isMobile && (
-                      <div className="absolute right-full mr-6 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0 pointer-events-none">
-                        <span className="text-[10px] font-mono font-bold uppercase tracking-[0.4em] text-white/90 bg-white/10 backdrop-blur-md px-4 py-2 rounded-lg border border-white/10 whitespace-nowrap">
-                          {item.label}
-                        </span>
-                      </div>
-                    )}
+                    {/* Tooltip Label */}
+                    <div className="absolute right-full mr-2 md:mr-6 top-1/2 -translate-y-1/2 transition-all transform pointer-events-none opacity-100 translate-x-0 md:opacity-0 md:group-hover:opacity-100 md:translate-x-4 md:group-hover:translate-x-0 z-20">
+                      <span className="text-[8px] md:text-[10px] font-mono font-bold uppercase tracking-[0.2em] md:tracking-[0.4em] text-white/90 bg-white/10 backdrop-blur-md px-2 md:px-4 py-1 md:py-2 rounded-lg border border-white/10 whitespace-nowrap">
+                        {item.label}
+                      </span>
+                    </div>
                   </motion.div>
                 ))}
               </div>
