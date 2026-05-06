@@ -5,7 +5,7 @@ import { X, ChevronLeft } from "lucide-react";
 const AUTOCAD_3D = "autocad-3d.png";
 const AUTOCAD_PLAN = "autocad-plan.png";
 
-export function ProgressDrawer() {
+export default function ProgressDrawer() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -23,7 +23,7 @@ export function ProgressDrawer() {
           delay: 2 
         }}
         onClick={() => setIsOpen(true)}
-        className="fixed right-0 top-1/2 -translate-y-1/2 z-[40] bg-white/10 backdrop-blur-md border-l border-y border-white/20 px-3 py-6 rounded-l-2xl shadow-2xl group flex flex-col items-center gap-2 cursor-pointer touch-none"
+        className="fixed right-0 top-1/2 -translate-y-1/2 z-[100] bg-white/10 backdrop-blur-md border-l border-y border-white/20 px-3 py-6 rounded-l-2xl shadow-2xl group flex flex-col items-center gap-2 cursor-pointer touch-none"
       >
         <ChevronLeft className="text-white/60 group-hover:text-white transition-colors" size={20} />
         <span className="[writing-mode:vertical-lr] text-[10px] uppercase tracking-[0.3em] font-bold text-white/40 group-hover:text-white/90 transition-colors">
