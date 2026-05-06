@@ -122,7 +122,7 @@ export function LoadingScreen({ onComplete, ready }: { onComplete: () => void; r
             animate={{ opacity: 1 }}
             className="text-white font-display text-sm tracking-[0.4em] uppercase mb-1"
           >
-            Flexxy Project
+            <span className="font-bold">Jai</span> Project
           </motion.h2>
           <motion.div 
             initial={{ opacity: 0 }}

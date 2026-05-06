@@ -42,4 +42,14 @@
     @apply absolute inset-0 pointer-events-none opacity-30;
     background: linear-gradient(135deg, rgba(200, 230, 255, 0.3) 0%, transparent 50%, rgba(255, 255, 255, 0.05) 100%);
   }
+
+  .custom-scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .custom-scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
 }

@@ -95,7 +95,7 @@ export function InteractivePortrait() {
       <div className="absolute inset-0">
         <motion.img 
           src="P.png" 
-          alt="Flexxy Portrait" 
+          alt="Jai Portrait" 
           animate={{ 
             filter: isHovered ? "grayscale(0%) brightness(1) contrast(1.1)" : "grayscale(100%) brightness(0.75) contrast(1)",
             scale: isHovered ? 1 : 1.05
@@ -139,7 +139,7 @@ export function InteractivePortrait() {
       </div>
 
       <div className="absolute bottom-6 left-6 right-6 z-10 group-hover:opacity-40 transition-opacity duration-500">
-        <p className="text-xs font-mono uppercase tracking-widest text-white/40 drop-shadow-lg">IDENT: FLEXXY / Age_17</p>
+        <p className="text-xs font-mono uppercase tracking-widest text-white/40 drop-shadow-lg">IDENT: JAIRUS / Age_17</p>
       </div>
     </div>
   );

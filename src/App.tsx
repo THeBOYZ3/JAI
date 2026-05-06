@@ -5,6 +5,7 @@ import { LoadingScreen } from "./components/LoadingScreen";
 import CrazyMovingText from "./components/CrazyMovingText";
 import { AudioPlayer } from "./components/AudioPlayer";
 import { InteractivePortrait } from "./components/InteractivePortrait";
+import { SocialDock } from "./components/SocialDock";
 import ProgressDrawer from "./components/ProgressDrawer";
 import { useState } from "react";
 
@@ -12,9 +13,22 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [audioReady, setAudioReady] = useState(false);
   const [view, setView] = useState<'hero' | 'about'>('hero');
+  const [leftOpen, setLeftOpen] = useState(false);
+  const [rightOpen, setRightOpen] = useState(false);
+
+  const toggleLeft = () => {
+    setLeftOpen(!leftOpen);
+    if (!leftOpen) setRightOpen(false);
+  };
+
+  const toggleRight = () => {
+    setRightOpen(!rightOpen);
+    if (!rightOpen) setLeftOpen(false);
+  };
 
   return (
     <>
+      <SocialDock isOpen={leftOpen} setIsOpen={toggleLeft} />
       <AnimatePresence mode="wait">
         {loading && (
           <LoadingScreen 
@@ -114,7 +128,7 @@ export default function App() {
 
                   <div className="pt-0 md:pt-12">
                     <p className="text-xl md:text-2xl font-light leading-relaxed mb-12 opacity-90">
-                      I am a creator interested in the intersection of technical modding, AI, and digital design. With a background in AutoCAD and civil engineering drafting, I enjoy mastering new technical tools quickly. I am currently focused on learning various programming languages while helping others with software troubleshooting and system optimization.
+                      I am a <span className="text-white font-medium">Senior High School student</span> and an <span className="text-white font-medium">aspiring developer</span>. I am currently working to learn both <span className="text-white/60">AutoCAD and web development</span>. I enjoy the challenge of learning these technical skills now to build a strong foundation for my future career.
                     </p>
 
                     <div className="space-y-12">
@@ -173,7 +187,7 @@ export default function App() {
             </motion.section>
           )}
         </AnimatePresence>
-        <ProgressDrawer />
+        <ProgressDrawer isOpen={rightOpen} setIsOpen={toggleRight} />
       </main>
     </>
   );
