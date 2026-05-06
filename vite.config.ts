@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     // Ensure this matches your GitHub repo name exactly
-    base: '/ai-project-web/', 
+    base: '/JAI/', 
     plugins: [
       react(),
       tailwindcss(),

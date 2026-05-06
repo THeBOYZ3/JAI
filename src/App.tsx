@@ -128,7 +128,7 @@ export default function App() {
 
                   <div className="pt-0 md:pt-12">
                     <p className="text-xl md:text-2xl font-light leading-relaxed mb-12 opacity-90">
-                      I am a <span className="text-white font-medium">Senior High School student</span> and an <span className="text-white font-medium">aspiring developer</span>. I am currently working to learn both <span className="text-white/60">AutoCAD and web development</span>. I enjoy the challenge of learning these technical skills now to build a strong foundation for my future career.
+                      I am a <span className="text-white font-medium">Senior High School student</span> and an <span className="text-white font-medium">aspiring Full-Stack Developer and UX/UI Designer</span>. I am working to master both <span className="text-white/60">AutoCAD and web development</span> to build a strong foundation for my future and the <span className="text-white font-bold">JAI Project</span>.
                     </p>
 
                     <div className="space-y-12">
