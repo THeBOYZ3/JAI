@@ -23,7 +23,7 @@ export default function ProgressDrawer() {
           delay: 2 
         }}
         onClick={() => setIsOpen(true)}
-        className="fixed right-0 top-1/2 -translate-y-1/2 z-[100] bg-white/10 backdrop-blur-md border-l border-y border-white/20 px-3 py-6 rounded-l-2xl shadow-2xl group flex flex-col items-center gap-2 cursor-pointer touch-none"
+        className="fixed right-0 top-1/2 -translate-y-1/2 z-[9999] bg-white/10 backdrop-blur-md border-l border-y border-white/20 px-3 py-6 rounded-l-2xl shadow-2xl group flex flex-col items-center gap-2 cursor-pointer touch-none"
       >
         <ChevronLeft className="text-white/60 group-hover:text-white transition-colors" size={20} />
         <span className="[writing-mode:vertical-lr] text-[10px] uppercase tracking-[0.3em] font-bold text-white/40 group-hover:text-white/90 transition-colors">
@@ -40,7 +40,7 @@ export default function ProgressDrawer() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100]"
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[998]"
             />
             <motion.div
               initial={{ x: "100%" }}
@@ -51,7 +51,7 @@ export default function ProgressDrawer() {
                 stiffness: 300, 
                 damping: 30 
               }}
-              className="fixed right-0 top-0 h-full w-full max-w-md bg-black/80 backdrop-blur-2xl border-l border-white/10 z-[101] shadow-2xl overflow-y-auto"
+              className="fixed right-0 top-0 h-full w-full max-w-md bg-black/80 backdrop-blur-2xl border-l border-white/10 z-[9999] shadow-2xl overflow-y-auto"
             >
               <div className="p-8 pb-24">
                 {/* Header */}
