@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
-const EMOJIS = ["❤️", "😍", "✨", "Jai"];
+const EMOJIS = ["❤️", "😍", "✨", "Flexxy"];
 
 interface Particle {
   id: number;

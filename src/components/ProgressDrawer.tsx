@@ -102,9 +102,9 @@ export default function ProgressDrawer() {
                 {/* Text Content */}
                 <div className="mt-12 space-y-6">
                   <div className="p-6 rounded-2xl bg-white/5 border border-white/5">
-                    <h4 className="text-sm font-bold text-white/80 mb-3 uppercase tracking-wider">The Vision</h4>
+                    <h4 className="text-sm font-bold text-white/80 mb-3 uppercase tracking-wider"> My Progress </h4>
                     <p className="text-sm text-white/60 leading-relaxed font-light">
-                      My specialization lies in <span className="text-white/90 font-medium">Civil Engineering Drafting</span>, where I bridge the gap between architectural concept and structural reality using AutoCAD. 
+                      I am a Full-Stack Developer and UX/UI Designer dedicated to mastering the art of code. While I have achieved mastery in AutoCAD and Civil Engineering Drafting, I now apply that same technical precision to building seamless digital experiences and mastering every programming language I encounter.
                     </p>
                   </div>
 
