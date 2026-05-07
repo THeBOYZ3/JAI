@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { X, ChevronLeft, Target, Terminal, Layout, Award } from "lucide-react";
+import { playSound, SoundType } from "../lib/soundUtils";
 
 const AUTOCAD_3D = "autocad-3d.png";
 const AUTOCAD_PLAN = "autocad-plan.png";
@@ -34,13 +35,17 @@ export default function ProgressDrawer({ isOpen, setIsOpen }: ProgressDrawerProp
         animate={{ x: 0, opacity: 1 }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
+        onMouseEnter={() => playSound(SoundType.TICK)}
         transition={{ 
           type: "spring", 
           stiffness: 260, 
           damping: 10,
           delay: 2 
         }}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          playSound(isOpen ? SoundType.DRAWER : SoundType.TAP);
+          setIsOpen(!isOpen);
+        }}
         className="fixed right-0 top-1/2 -translate-y-1/2 z-[9999] bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-l-full shadow-2xl group flex items-center justify-center cursor-pointer overflow-hidden"
       >
         <motion.div
@@ -69,7 +74,10 @@ export default function ProgressDrawer({ isOpen, setIsOpen }: ProgressDrawerProp
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                playSound(SoundType.DRAWER);
+                setIsOpen(false);
+              }}
               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998]"
             />
 
@@ -171,6 +179,8 @@ export default function ProgressDrawer({ isOpen, setIsOpen }: ProgressDrawerProp
                     <motion.div
                       whileHover={{ scale: 1.1, x: -5 }}
                       whileTap={{ scale: 0.95 }}
+                      onMouseEnter={() => playSound(SoundType.TICK)}
+                      onClick={() => playSound(SoundType.TAP)}
                       className="w-12 h-12 md:w-20 md:h-20 flex items-center justify-center rounded-2xl md:rounded-[2rem] bg-white/10 border border-white/10 text-white/40 group-hover:text-white group-hover:bg-white/20 group-hover:border-white/30 transition-all cursor-pointer backdrop-blur-xl shadow-xl overflow-hidden"
                     >
                       {/* Hover Glow */}

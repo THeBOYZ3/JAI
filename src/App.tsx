@@ -8,6 +8,7 @@ import { InteractivePortrait } from "./components/InteractivePortrait";
 import { SocialDock } from "./components/SocialDock";
 import ProgressDrawer from "./components/ProgressDrawer";
 import { useState } from "react";
+import { playSound, SoundType } from "./lib/soundUtils";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -87,7 +88,11 @@ export default function App() {
                 </motion.p>
                 
                 <motion.button
-                  onClick={() => setView('about')}
+                  onClick={() => {
+                    playSound(SoundType.TAP);
+                    setView('about');
+                  }}
+                  onMouseEnter={() => playSound(SoundType.TICK)}
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 1.2, duration: 0.5 }}
@@ -111,7 +116,11 @@ export default function App() {
             >
               <div className="container mx-auto max-w-6xl relative z-10">
                 <button 
-                  onClick={() => setView('hero')}
+                  onClick={() => {
+                    playSound(SoundType.TAP);
+                    setView('hero');
+                  }}
+                  onMouseEnter={() => playSound(SoundType.TICK)}
                   className="mb-12 text-white/40 hover:text-white transition-colors flex items-center gap-2 group cursor-pointer"
                 >
                   <div className="rotate-180 inline-block group-hover:-translate-x-1 transition-transform">
@@ -166,6 +175,8 @@ export default function App() {
                           href="https://www.instagram.com/jcajairus/" 
                           target="_blank" 
                           rel="noopener noreferrer" 
+                          onClick={() => playSound(SoundType.INSTAGRAM)}
+                          onMouseEnter={() => playSound(SoundType.TICK)}
                           className="flex items-center gap-4 group cursor-pointer"
                         >
                           <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:border-white transition-all duration-300">

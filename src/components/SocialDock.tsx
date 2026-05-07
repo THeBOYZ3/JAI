@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "motion/react";
 import React, { useState } from "react";
 import { Facebook, Instagram, Mail, Youtube, Share2, X, Copy, Check } from "lucide-react";
+import { playSound, SoundType } from "../lib/soundUtils";
 
 const SOCIAL_LINKS = [
   {
@@ -51,6 +52,7 @@ export const SocialDock = ({ isOpen, setIsOpen }: SocialDockProps) => {
 
   const handleCopy = (e: React.MouseEvent) => {
     e.stopPropagation();
+    playSound(SoundType.TAP); // Keep tap for copy
     navigator.clipboard.writeText(email);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -70,7 +72,11 @@ export const SocialDock = ({ isOpen, setIsOpen }: SocialDockProps) => {
         animate={{ x: 0, opacity: 1 }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        onClick={() => setIsOpen(!isOpen)}
+        onMouseEnter={() => playSound(SoundType.TICK)}
+        onClick={() => {
+          playSound(isOpen ? SoundType.DRAWER : SoundType.TAP);
+          setIsOpen(!isOpen);
+        }}
         className="fixed left-0 top-1/2 -translate-y-1/2 z-[9999] bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-r-full shadow-2xl group flex items-center justify-center cursor-pointer"
       >
         <motion.div
@@ -137,12 +143,21 @@ export const SocialDock = ({ isOpen, setIsOpen }: SocialDockProps) => {
                       target={social.label === "Mail" ? undefined : "_blank"}
                       rel="noopener noreferrer"
                       onClick={(e) => {
+                        if (social.label === "Instagram") playSound(SoundType.INSTAGRAM);
+                        else if (social.label === "YouTube") playSound(SoundType.YOUTUBE);
+                        else if (social.label === "Mail") playSound(SoundType.EMAIL);
+                        else if (social.label === "Facebook") playSound(SoundType.GENERIC_POP);
+                        else playSound(SoundType.TAP);
+
                         if (social.label === "Mail") {
                           e.preventDefault();
                           setShowEmailModal(true);
                         }
                       }}
-                      onMouseEnter={() => setHoveredIndex(index)}
+                      onMouseEnter={() => {
+                        setHoveredIndex(index);
+                        playSound(SoundType.TICK);
+                      }}
                       onMouseLeave={() => setHoveredIndex(null)}
                       whileHover={{ 
                         scale: 1.2, 
@@ -188,7 +203,10 @@ export const SocialDock = ({ isOpen, setIsOpen }: SocialDockProps) => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     className="absolute inset-0 bg-black/80 backdrop-blur-md"
-                    onClick={() => setShowEmailModal(false)}
+                    onClick={() => {
+                      playSound(SoundType.DRAWER);
+                      setShowEmailModal(false);
+                    }}
                   />
                   
                   <motion.div
@@ -199,7 +217,11 @@ export const SocialDock = ({ isOpen, setIsOpen }: SocialDockProps) => {
                   >
                     {/* Close Button */}
                     <button 
-                      onClick={() => setShowEmailModal(false)}
+                      onClick={() => {
+                        playSound(SoundType.DRAWER);
+                        setShowEmailModal(false);
+                      }}
+                      onMouseEnter={() => playSound(SoundType.TICK)}
                       className="absolute top-4 right-4 text-white/40 hover:text-white transition-colors cursor-pointer"
                     >
                       <X size={20} />
@@ -219,6 +241,7 @@ export const SocialDock = ({ isOpen, setIsOpen }: SocialDockProps) => {
                         
                         <button
                           onClick={handleCopy}
+                          onMouseEnter={() => playSound(SoundType.TICK)}
                           className="relative flex items-center justify-center w-12 h-12 rounded-lg bg-white/10 border border-white/10 hover:bg-white/20 hover:border-white/20 transition-all cursor-pointer group/copy"
                         >
                           <AnimatePresence mode="wait">
