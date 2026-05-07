@@ -110,7 +110,7 @@ export default function ProgressDrawer({ isOpen, setIsOpen }: ProgressDrawerProp
                   <div className="space-y-6">
                     <h4 className="text-[10px] md:text-xs font-bold text-white/50 uppercase tracking-[0.6em] select-text"> MY BIO </h4>
                     <p className="text-sm md:text-lg text-white/90 leading-relaxed font-light select-text max-w-lg">
-                      I am a <span className="text-white font-medium">Senior High School student</span> and an <span className="text-white font-medium">aspiring Full-Stack Developer and UX/UI Designer</span>. I am working to master both <span className="text-white/60">AutoCAD and web development</span> to build a strong foundation for my future and the <span className="text-white font-bold">JAI Project</span>.
+                      My name is <span className="text-white font-bold">Jairus C. Alolod</span> from <span className="text-white font-medium">PCCASHS</span>. I am a <span className="text-white font-medium">Senior High School student</span> and an <span className="text-white font-medium">aspiring Full-Stack Developer and UX/UI Designer</span>. I am working to master both <span className="text-white/60">AutoCAD and web development</span> to build a strong foundation for my future and the <span className="text-white font-bold">JAI Project</span>.
                     </p>
                   </div>
 

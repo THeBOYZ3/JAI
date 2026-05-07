@@ -2,16 +2,27 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Play, Square, RotateCcw } from 'lucide-react';
 import { EmojiRain } from './EmojiRain';
+import { FloatingSpeechBubble } from './FloatingSpeechBubble';
+import { playSound, SoundType } from '../lib/soundUtils';
 
 const AUDIO_URL = "https://raw.githubusercontent.com/THeBOYZ3/jai-project-assets/refs/heads/main/YTDown_YouTube_Skate-Avenue-PH-I-Knew-I-Loved-You-Rock-_Media_yRrpQ5Sh5n8_009_128k.mp3";
 
-export const AudioPlayer: React.FC<{ onReady?: () => void; loading?: boolean }> = ({ onReady, loading }) => {
+export const AudioPlayer: React.FC<{ 
+  onReady?: () => void; 
+  loading?: boolean;
+  onMusicStateChange?: (playing: boolean) => void;
+}> = ({ onReady, loading, onMusicStateChange }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showControls, setShowControls] = useState(false);
   const [isPlayingEffect, setIsPlayingEffect] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const effectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Sync to parent whenever internal isPlaying changes
+  useEffect(() => {
+    onMusicStateChange?.(isPlaying);
+  }, [isPlaying, onMusicStateChange]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -81,22 +92,23 @@ export const AudioPlayer: React.FC<{ onReady?: () => void; loading?: boolean }> 
   };
 
   return (
-    <div className="fixed top-6 md:top-8 left-1/2 -translate-x-1/2 z-[100] flex items-center justify-center px-4 w-full max-w-sm pointer-events-none">
-      <audio 
-        ref={audioRef} 
-        src={AUDIO_URL} 
-        loop 
-        preload="auto"
-        playsInline
-        crossOrigin="anonymous"
-        onCanPlayThrough={handleCanPlayThrough}
-        onError={handleAudioError}
-      />
-
+    <>
       <EmojiRain active={isPlayingEffect} />
-      
-      <AnimatePresence>
-        {!loading && (
+
+      <div className="fixed top-6 md:top-8 left-1/2 -translate-x-1/2 z-[100] flex items-center justify-center px-4 w-full max-w-sm pointer-events-none">
+        <audio 
+          ref={audioRef} 
+          src={AUDIO_URL} 
+          loop 
+          preload="auto"
+          playsInline
+          crossOrigin="anonymous"
+          onCanPlayThrough={handleCanPlayThrough}
+          onError={handleAudioError}
+        />
+
+        <AnimatePresence>
+          {!loading && (
           <motion.div 
             initial={{ opacity: 0, y: -20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -108,7 +120,10 @@ export const AudioPlayer: React.FC<{ onReady?: () => void; loading?: boolean }> 
             <motion.div
               whileHover={{ scale: 1.1, rotate: isPlayingEffect ? 0 : 10 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setShowControls(!showControls)}
+              onClick={() => {
+                playSound(SoundType.TAP);
+                setShowControls(!showControls);
+              }}
               animate={isPlayingEffect ? { rotate: 360 } : { rotate: 0 }}
               transition={isPlayingEffect ? { 
                 rotate: { duration: 3, repeat: Infinity, ease: "linear" },
@@ -131,6 +146,11 @@ export const AudioPlayer: React.FC<{ onReady?: () => void; loading?: boolean }> 
                 />
               )}
             </motion.div>
+
+            {/* FLOATING SPEECH BUBBLE */}
+            {!isPlaying && (
+              <FloatingSpeechBubble />
+            )}
 
             {/* LOVE EXPRESSION OVERLAY */}
             <AnimatePresence>
@@ -198,5 +218,6 @@ export const AudioPlayer: React.FC<{ onReady?: () => void; loading?: boolean }> 
         )}
       </AnimatePresence>
     </div>
+    </>
   );
 };

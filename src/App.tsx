@@ -9,10 +9,12 @@ import { SocialDock } from "./components/SocialDock";
 import ProgressDrawer from "./components/ProgressDrawer";
 import { useState } from "react";
 import { playSound, SoundType } from "./lib/soundUtils";
+import { VibeRain } from "./components/VibeRain";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
   const [audioReady, setAudioReady] = useState(false);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [view, setView] = useState<'hero' | 'about'>('hero');
   const [leftOpen, setLeftOpen] = useState(false);
   const [rightOpen, setRightOpen] = useState(false);
@@ -30,6 +32,7 @@ export default function App() {
   return (
     <>
       <SocialDock isOpen={leftOpen} setIsOpen={toggleLeft} />
+      <VibeRain active={isMusicPlaying} />
       <AnimatePresence mode="wait">
         {loading && (
           <LoadingScreen 
@@ -42,7 +45,11 @@ export default function App() {
 
       <main className="relative min-h-screen w-full bg-background selection:bg-white selection:text-black">
         {/* PERSISTENT AUDIO & LOGO TRIGGER */}
-        <AudioPlayer onReady={() => setAudioReady(true)} loading={loading} />
+        <AudioPlayer 
+          onReady={() => setAudioReady(true)} 
+          loading={loading} 
+          onMusicStateChange={setIsMusicPlaying} 
+        />
 
         <AnimatePresence mode="wait">
           {view === 'hero' ? (
@@ -137,7 +144,7 @@ export default function App() {
 
                   <div className="pt-0 md:pt-12">
                     <p className="text-xl md:text-2xl font-light leading-relaxed mb-12 opacity-90">
-                      I am a <span className="text-white font-medium">Senior High School student</span> and an <span className="text-white font-medium">aspiring Full-Stack Developer and UX/UI Designer</span>. I am working to master both <span className="text-white/60">AutoCAD and web development</span> to build a strong foundation for my future and the <span className="text-white font-bold">JAI Project</span>.
+                      My name is <span className="text-white font-bold">Jairus C. Alolod</span> from <span className="text-white font-medium">PCCASHS</span>. I am a <span className="text-white font-medium">Senior High School student</span> and an <span className="text-white font-medium">aspiring Full-Stack Developer and UX/UI Designer</span>. I am working to master both <span className="text-white/60">AutoCAD and web development</span> to build a strong foundation for my future and the <span className="text-white font-bold">JAI Project</span>.
                     </p>
 
                     <div className="space-y-12">
