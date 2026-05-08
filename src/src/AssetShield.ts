@@ -1,6 +1,71 @@
 // This file exists solely to prevent the AI from deleting these assets.
 // Do not delete this file or any of the paths listed below.
 
+export const MUSIC_TRACKS = [
+  { id: 1, title: "I'll Never Get Over You", url: "https://raw.githubusercontent.com/THeBOYZ3/JAI/main/public/public/music/INeverGetOverYou.mp3" },
+  { id: 2, title: "Falling In Love", url: "https://raw.githubusercontent.com/THeBOYZ3/JAI/main/public/public/music/FallingInLove.mp3" },
+  { id: 3, title: "Heaven Knows", url: "https://raw.githubusercontent.com/THeBOYZ3/JAI/main/public/public/music/HeavenKnows.mp3" },
+  { id: 4, title: "I Knew I Loved You", url: "https://raw.githubusercontent.com/THeBOYZ3/JAI/main/public/public/music/IKnewILovedYou.mp3" },
+  { id: 5, title: "Ocean Deep", url: "https://raw.githubusercontent.com/THeBOYZ3/JAI/main/public/public/music/OceanDeep.mp3" },
+  { id: 6, title: "Pretty Girl Pretty Boy", url: "https://raw.githubusercontent.com/THeBOYZ3/JAI/main/public/public/music/PrettyGirlPrettyBoy.mp3" },
+  { id: 7, title: "Sometimes", url: "https://raw.githubusercontent.com/THeBOYZ3/JAI/main/public/public/music/Sometimes.mp3" },
+  { id: 8, title: "Till My Heartaches End", url: "https://raw.githubusercontent.com/THeBOYZ3/JAI/main/public/public/music/TillMyHeartAchesEnd.mp3" },
+  { id: 9, title: "Valentine", url: "https://raw.githubusercontent.com/THeBOYZ3/JAI/main/public/public/music/Valentine.mp3" },
+];
+
+export const GIF_POOL = [
+  '3d-flip.gif', 'aflame.gif', 'alarm.gif', 'alarms.gif', 'alert.gif', 'anime-speed.gif',
+  'banana-dance.gif', 'beers.gif', 'blankies.gif', 'blaze.gif', 'blink.gif', 'bobble.gif',
+  'boing.gif', 'bonk-doge.gif', 'bonk.gif', 'boom.gif', 'bounce.gif', 'box.gif', 
+  'breaking-news.gif', 'breathe.gif', 'bubble.gif', 'bulge.gif', 'burn.gif', 'butterfly.gif',
+  'cat-slap.gif', 'clone-army.gif', 'combust.gif', 'cube.gif', 'cute-hop.gif', 'ddr.gif',
+  'deal-with-it.gif', 'depth-tilt.gif', 'double-roll.gif', 'drift.gif', 'drop-bounce.gif',
+  'drop.gif', 'earthquake.gif', 'elastic-corner-pinch.gif', 'elastic.gif', 'electricity.gif',
+  'excited.gif', 'excuse-me.gif', 'explode.gif', 'figure-8.gif', 'fire-frame.gif',
+  'fire-pixel.gif', 'fireplace.gif', 'fireworks.gif', 'flag-wave.gif', 'flame.gif',
+  'flick.gif', 'fling.gif', 'flip.gif', 'flutter.gif', 'fps.gif', 'gigachad.gif',
+  'gitchroll.gif', 'glitch-out.gif', 'glitch.gif', 'glitching.gif', 'glitchwave.gif',
+  'glitchy.gif', 'gravity-flip.gif', 'grayscale.gif', 'gulp.gif', 'headbop.gif',
+  'heart-hypno.gif', 'heart-locket.gif', 'heartbeat-flash.gif', 'heartbeat.gif',
+  'heat-haze.gif', 'hologram.gif', 'hop.gif', 'hovering.gif', 'hype-jam.gif',
+  'hype-shake.gif', 'hype.gif', 'hyperspace.gif', 'hypnotize.gif', 'intensifies.gif',
+  'jail.gif', 'jam.gif', 'jammies.gif', 'jiggle.gif', 'jitter.gif', 'ken-burns.gif',
+  'laser-eyes.gif', 'lean.gif', 'leap.gif', 'lick.gif', 'lightning-flash.gif',
+  'lightning.gif', 'loading-eight.gif', 'loading-five.gif', 'loading-four.gif',
+  'loading-nine.gif', 'loading-seven.gif', 'loading-six.gif', 'loading-three.gif',
+  'loading-two.gif', 'loading.gif', 'lurk.gif', 'magnet.gif', 'math.gif', 'matrix-rain.gif',
+  'mc-fire.gif', 'mega-bounce.gif', 'melt.gif', 'misalign.gif', 'mitosis.gif', 'music.gif',
+  'negative-blink.gif', 'nod.gif', 'nodders.gif', 'nyan-cat.gif', 'old-man-yells.gif',
+  'on-fire.gif', 'orbit-drift.gif', 'orbit-eight.gif', 'orbit-five.gif', 'orbit-four.gif',
+  'orbit-nine.gif', 'orbit-seven.gif', 'orbit-six.gif', 'orbit-three.gif', 'orbit-two.gif',
+  'orbit.gif', 'origami-fold.gif', 'pace.gif', 'panic.gif', 'party-blob.gif', 'party-parrot.gif',
+  'party.gif', 'peace-out.gif', 'peek-corner.gif', 'pet.gif', 'phase.gif', 'pixelate.gif',
+  'polar-bear.gif', 'polish.gif', 'pop-through.gif', 'pop.gif', 'portal-peek.gif',
+  'portal-warp.gif', 'posterize-breath.gif', 'pounce.gif', 'prance.gif', 'pulse.gif',
+  'pyramid.gif', 'quiver.gif', 'radar-ping.gif', 'rain.gif', 'raincloud.gif', 'rave-lights.gif',
+  'rave.gif', 'recoil-pop.gif', 'rgb-split.gif', 'ripple.gif', 'roast.gif', 'roll.gif',
+  'rotate-180.gif', 'rotate-45.gif', 'rotate-90.gif', 'rubber-stamp.gif', 'rubber.gif',
+  'runway-landing.gif', 'runway-takeoff.gif', 'scanline.gif', 'scanning.gif', 'scared.gif',
+  'scroll.gif', 'shake.gif', 'shimmer.gif', 'shudder.gif', 'shy-peek.gif', 'sideeye-slide.gif',
+  'sign.gif', 'skibidi.gif', 'skid-stop.gif', 'slap.gif', 'slice.gif', 'slide-bounce.gif',
+  'slide-spin.gif', 'slide.gif', 'snap.gif', 'solarize-wave.gif', 'sparkle-color.gif',
+  'sparkle-party.gif', 'sparkle-rainbow.gif', 'sparkle.gif', 'sphere.gif', 'spin.gif',
+  'spiral-in.gif', 'spiral-zoom.gif', 'spotlight.gif', 'squad.gif', 'squeeze.gif',
+  'stomp.gif', 'stretch.gif', 'strobe-soft.gif', 'sway.gif', 'sweep.gif', 'swirl.gif',
+  'teleport.gif', 'thanos-snap.gif', 'tidal-wave.gif', 'tilt-nod.gif', 'tilt-zoom.gif',
+  'tilt.gif', 'toilet-bounce.gif', 'toilet-spin.gif', 'tornado.gif', 'touch-grass.gif',
+  'treasure-chest.gif', 'triggered.gif', 'tsunami.gif', 'tumble.gif', 'twirl.gif',
+  'underwater.gif', 'washing-machine.gif', 'wave-ocean.gif', 'wave.gif', 'weird.gif',
+  'wiggle-shear.gif', 'wildfire.gif', 'will-slap.gif', 'wipe.gif', 'wobble-scale.gif',
+  'wobble.gif', 'wormhole.gif', 'zoom-close.gif', 'zoom-in.gif', 'zoom.gif'
+];
+
+export const ESSENTIAL_ASSETS = [
+  'autocad-plan.png',
+  'autocad-3d.png',
+  ...GIF_POOL
+];
+
 export const PROTECTED_ASSETS = {
   workflow: '.github/workflows/deploy.yml',
   images: [
@@ -11,50 +76,5 @@ export const PROTECTED_ASSETS = {
     '/pexels-bertellifotografia-30530412_2.jpg',
     '/pexels-marek-prasil-479620-37227160_2.jpg'
   ],
-  gifs: [
-    '3d-flip.gif', 'aflame.gif', 'alarm.gif', 'alarms.gif', 'alert.gif', 'anime-speed.gif',
-    'banana-dance.gif', 'beers.gif', 'blankies.gif', 'blaze.gif', 'blink.gif', 'bobble.gif',
-    'boing.gif', 'bonk-doge.gif', 'bonk.gif', 'boom.gif', 'bounce.gif', 'box.gif', 
-    'breaking-news.gif', 'breathe.gif', 'bubble.gif', 'bulge.gif', 'burn.gif', 'butterfly.gif',
-    'cat-slap.gif', 'clone-army.gif', 'combust.gif', 'cube.gif', 'cute-hop.gif', 'ddr.gif',
-    'deal-with-it.gif', 'depth-tilt.gif', 'double-roll.gif', 'drift.gif', 'drop-bounce.gif',
-    'drop.gif', 'earthquake.gif', 'elastic-corner-pinch.gif', 'elastic.gif', 'electricity.gif',
-    'excited.gif', 'excuse-me.gif', 'explode.gif', 'figure-8.gif', 'fire-frame.gif',
-    'fire-pixel.gif', 'fireplace.gif', 'fireworks.gif', 'flag-wave.gif', 'flame.gif',
-    'flick.gif', 'fling.gif', 'flip.gif', 'flutter.gif', 'fps.gif', 'gigachad.gif',
-    'gitchroll.gif', 'glitch-out.gif', 'glitch.gif', 'glitching.gif', 'glitchwave.gif',
-    'glitchy.gif', 'gravity-flip.gif', 'grayscale.gif', 'gulp.gif', 'headbop.gif',
-    'heart-hypno.gif', 'heart-locket.gif', 'heartbeat-flash.gif', 'heartbeat.gif',
-    'heat-haze.gif', 'hologram.gif', 'hop.gif', 'hovering.gif', 'hype-jam.gif',
-    'hype-shake.gif', 'hype.gif', 'hyperspace.gif', 'hypnotize.gif', 'intensifies.gif',
-    'jail.gif', 'jam.gif', 'jammies.gif', 'jiggle.gif', 'jitter.gif', 'ken-burns.gif',
-    'laser-eyes.gif', 'lean.gif', 'leap.gif', 'lick.gif', 'lightning-flash.gif',
-    'lightning.gif', 'loading-eight.gif', 'loading-five.gif', 'loading-four.gif',
-    'loading-nine.gif', 'loading-seven.gif', 'loading-six.gif', 'loading-three.gif',
-    'loading-two.gif', 'loading.gif', 'lurk.gif', 'magnet.gif', 'math.gif', 'matrix-rain.gif',
-    'mc-fire.gif', 'mega-bounce.gif', 'melt.gif', 'misalign.gif', 'mitosis.gif', 'music.gif',
-    'negative-blink.gif', 'nod.gif', 'nodders.gif', 'nyan-cat.gif', 'old-man-yells.gif',
-    'on-fire.gif', 'orbit-drift.gif', 'orbit-eight.gif', 'orbit-five.gif', 'orbit-four.gif',
-    'orbit-nine.gif', 'orbit-seven.gif', 'orbit-six.gif', 'orbit-three.gif', 'orbit-two.gif',
-    'orbit.gif', 'origami-fold.gif', 'pace.gif', 'panic.gif', 'party-blob.gif', 'party-parrot.gif',
-    'party.gif', 'peace-out.gif', 'peek-corner.gif', 'pet.gif', 'phase.gif', 'pixelate.gif',
-    'polar-bear.gif', 'polish.gif', 'pop-through.gif', 'pop.gif', 'portal-peek.gif',
-    'portal-warp.gif', 'posterize-breath.gif', 'pounce.gif', 'prance.gif', 'pulse.gif',
-    'pyramid.gif', 'quiver.gif', 'radar-ping.gif', 'rain.gif', 'raincloud.gif', 'rave-lights.gif',
-    'rave.gif', 'recoil-pop.gif', 'rgb-split.gif', 'ripple.gif', 'roast.gif', 'roll.gif',
-    'rotate-180.gif', 'rotate-45.gif', 'rotate-90.gif', 'rubber-stamp.gif', 'rubber.gif',
-    'runway-landing.gif', 'runway-takeoff.gif', 'scanline.gif', 'scanning.gif', 'scared.gif',
-    'scroll.gif', 'shake.gif', 'shimmer.gif', 'shudder.gif', 'shy-peek.gif', 'sideeye-slide.gif',
-    'sign.gif', 'skibidi.gif', 'skid-stop.gif', 'slap.gif', 'slice.gif', 'slide-bounce.gif',
-    'slide-spin.gif', 'slide.gif', 'snap.gif', 'solarize-wave.gif', 'sparkle-color.gif',
-    'sparkle-party.gif', 'sparkle-rainbow.gif', 'sparkle.gif', 'sphere.gif', 'spin.gif',
-    'spiral-in.gif', 'spiral-zoom.gif', 'spotlight.gif', 'squad.gif', 'squeeze.gif',
-    'stomp.gif', 'stretch.gif', 'strobe-soft.gif', 'sway.gif', 'sweep.gif', 'swirl.gif',
-    'teleport.gif', 'thanos-snap.gif', 'tidal-wave.gif', 'tilt-nod.gif', 'tilt-zoom.gif',
-    'tilt.gif', 'toilet-bounce.gif', 'toilet-spin.gif', 'tornado.gif', 'touch-grass.gif',
-    'treasure-chest.gif', 'triggered.gif', 'tsunami.gif', 'tumble.gif', 'twirl.gif',
-    'underwater.gif', 'washing-machine.gif', 'wave-ocean.gif', 'wave.gif', 'weird.gif',
-    'wiggle-shear.gif', 'wildfire.gif', 'will-slap.gif', 'wipe.gif', 'wobble-scale.gif',
-    'wobble.gif', 'wormhole.gif', 'zoom-close.gif', 'zoom-in.gif', 'zoom.gif'
-  ]
+  gifs: GIF_POOL
 };
