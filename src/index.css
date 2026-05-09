@@ -52,4 +52,27 @@
   .custom-scrollbar-hide::-webkit-scrollbar {
     display: none; /* Chrome, Safari and Opera */
   }
+
+  /* Chatbase Widget Z-Index & Mobile Safety */
+  #chatbase-bubble-button,
+  #chatbase-bubble-window,
+  [id^="chatbase-"] {
+    z-index: 999999 !important;
+    transition: opacity 0.3s ease, transform 0.3s ease !important;
+  }
+
+  /* Hide Chatbase when playlist is open */
+  body[data-playlist-open="true"] #chatbase-bubble-button,
+  body[data-playlist-open="true"] #chatbase-bubble-window,
+  body[data-playlist-open="true"] [id^="chatbase-"] {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: scale(0.9) translateY(10px) !important;
+  }
+
+  @media (max-width: 768px) {
+    #chatbase-bubble-button {
+      bottom: calc(20px + env(safe-area-inset-bottom)) !important;
+    }
+  }
 }
