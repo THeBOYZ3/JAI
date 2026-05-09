@@ -14,11 +14,11 @@ const MESSAGES = [
   "You, me, and some music. Just one click away."
 ];
 
-export function FloatingSpeechBubble() {
+export function FloatingSpeechBubble({ trackIndex }: { trackIndex: number }) {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const randomize = () => {
       setIndex((prev) => {
         let next = prev;
         while (next === prev && MESSAGES.length > 1) {
@@ -26,9 +26,15 @@ export function FloatingSpeechBubble() {
         }
         return next;
       });
-    }, 10000);
+    };
+
+    // Initial randomization on track change
+    randomize();
+
+    // Set up 5-second interval
+    const interval = setInterval(randomize, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [trackIndex]);
 
   return (
     <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 pointer-events-none z-[100] w-max">
