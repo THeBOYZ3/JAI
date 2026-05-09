@@ -99,7 +99,7 @@ export const SocialDock = ({ isOpen, setIsOpen }: SocialDockProps) => {
                 setIsOpen(false);
                 setShowEmailModal(false);
               }}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998]"
+              className="fixed inset-0 bg-black/60 backdrop-blur-[2px] md:backdrop-blur-sm z-[9998]"
             />
 
             {/* Left Radial Wheel */}
