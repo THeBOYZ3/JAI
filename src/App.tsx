@@ -66,7 +66,7 @@ export default function App() {
                 overlayOpacity={0.4}
               />
               
-              <div className="relative z-10 container mx-auto px-6 text-center">
+              <div className="relative z-50 container mx-auto px-6 text-center flex flex-col items-center justify-center">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
