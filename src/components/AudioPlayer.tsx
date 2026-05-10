@@ -5,6 +5,7 @@ import { FloatingSpeechBubble } from './FloatingSpeechBubble';
 import { VibeRain } from './VibeRain';
 import { playSound, SoundType } from '../lib/soundUtils';
 import { MUSIC_TRACKS } from '../AssetShield';
+
 export const AudioPlayer: React.FC<{ 
   onReady?: () => void; 
   loading?: boolean;
