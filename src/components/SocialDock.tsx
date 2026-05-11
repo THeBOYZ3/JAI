@@ -65,7 +65,7 @@ export const SocialDock = ({ isOpen, setIsOpen }: SocialDockProps) => {
   };
 
   return (
-    <>
+    <div className="fixed inset-0 z-[9999] pointer-events-none">
       {/* Radial Trigger - Left Side */}
       <motion.button
         initial={{ x: -100, opacity: 0 }}
@@ -77,7 +77,7 @@ export const SocialDock = ({ isOpen, setIsOpen }: SocialDockProps) => {
           playSound(isOpen ? SoundType.DRAWER : SoundType.TAP);
           setIsOpen(!isOpen);
         }}
-        className="fixed left-0 top-1/2 -translate-y-1/2 z-[9999] bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-r-full shadow-2xl group flex items-center justify-center cursor-pointer"
+        className="fixed left-0 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-r-full shadow-2xl group flex items-center justify-center cursor-pointer pointer-events-auto"
       >
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
@@ -99,7 +99,7 @@ export const SocialDock = ({ isOpen, setIsOpen }: SocialDockProps) => {
                 setIsOpen(false);
                 setShowEmailModal(false);
               }}
-              className="fixed inset-0 bg-black/60 backdrop-blur-[2px] md:backdrop-blur-sm z-[9998]"
+              className="fixed inset-0 bg-black/60 backdrop-blur-[2px] md:backdrop-blur-sm z-[9998] pointer-events-auto"
             />
 
             {/* Left Radial Wheel */}
@@ -108,7 +108,7 @@ export const SocialDock = ({ isOpen, setIsOpen }: SocialDockProps) => {
               animate={{ x: isMobile ? "-70%" : "-50%", rotate: 0 }}
               exit={{ x: "-100%", rotate: -45 }}
               transition={{ type: "spring", stiffness: 80, damping: 20 }}
-              className="fixed left-0 top-1/2 -translate-y-1/2 w-[100vw] h-[100vw] md:w-[600px] md:h-[600px] bg-black/40 backdrop-blur-3xl border border-white/10 z-[9999] rounded-full shadow-2xl flex items-center justify-end"
+              className="fixed left-0 top-1/2 -translate-y-1/2 w-[100vw] h-[100vw] md:w-[600px] md:h-[600px] bg-black/40 backdrop-blur-3xl border border-white/10 z-[9999] rounded-full shadow-2xl flex items-center justify-end pointer-events-none"
             >
               {/* Social Icons on the edge */}
               {SOCIAL_LINKS.map((social, index) => (
@@ -197,7 +197,7 @@ export const SocialDock = ({ isOpen, setIsOpen }: SocialDockProps) => {
             {/* Email Floating Modal - Moved outside the wheel for true centering */}
             <AnimatePresence>
               {showEmailModal && (
-                <div className="fixed inset-0 flex items-center justify-center z-[10000] p-6 lg:p-0">
+                <div className="fixed inset-0 flex items-center justify-center z-[10000] p-6 lg:p-0 pointer-events-auto">
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -277,6 +277,6 @@ export const SocialDock = ({ isOpen, setIsOpen }: SocialDockProps) => {
           </>
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 };
