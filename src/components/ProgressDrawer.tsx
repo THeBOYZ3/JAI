@@ -31,7 +31,7 @@ export default function ProgressDrawer({ isOpen, setIsOpen }: ProgressDrawerProp
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   return (
-    <>
+    <div className="fixed inset-0 z-[9999] pointer-events-none">
       {/* Floating Trigger Button */}
       <motion.button
         initial={{ x: 100, opacity: 0 }}
@@ -44,7 +44,7 @@ export default function ProgressDrawer({ isOpen, setIsOpen }: ProgressDrawerProp
           playSound(isOpen ? SoundType.DRAWER : SoundType.TAP);
           setIsOpen(!isOpen);
         }}
-        className="fixed right-0 top-1/2 -translate-y-1/2 z-[9999] bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-l-full shadow-2xl group flex items-center justify-center cursor-pointer overflow-hidden"
+        className="fixed right-0 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-l-full shadow-2xl group flex items-center justify-center cursor-pointer overflow-hidden pointer-events-auto"
       >
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
@@ -72,7 +72,7 @@ export default function ProgressDrawer({ isOpen, setIsOpen }: ProgressDrawerProp
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-[2px] z-[9998]"
+              className="fixed inset-0 bg-black/60 backdrop-blur-[2px] z-[9998] pointer-events-auto"
             />
 
             {/* Drawer Container */}
@@ -81,7 +81,7 @@ export default function ProgressDrawer({ isOpen, setIsOpen }: ProgressDrawerProp
               animate={{ x: "0%" }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 100, damping: 20, mass: 0.8 }}
-              className={`fixed right-0 top-0 h-full ${isMobile ? 'w-[85%]' : 'w-[700px] lg:w-[850px]'} bg-black/90 backdrop-blur-3xl border-l border-white/10 z-[9999] flex flex-row items-center overflow-hidden`}
+              className={`fixed right-0 top-0 h-full ${isMobile ? 'w-[85%]' : 'w-[700px] lg:w-[850px]'} bg-black/90 backdrop-blur-3xl border-l border-white/10 z-[9999] flex flex-row items-center overflow-hidden pointer-events-auto`}
             >
               <div className="flex-1 h-full overflow-y-auto custom-scrollbar-hide flex flex-col justify-start p-6 md:p-24 pt-24 pb-32">
                 <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }} className="w-full max-w-xl space-y-16">
@@ -154,7 +154,7 @@ export default function ProgressDrawer({ isOpen, setIsOpen }: ProgressDrawerProp
           </>
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 }
 
