@@ -12,6 +12,7 @@ import { useState } from "react";
 import { playSound, SoundType } from "./lib/soundUtils";
 import { VibeRain } from "./components/VibeRain";
 import { SequentialHighlightProvider, HighlightSentence, HighlightListItem } from "./components/SequentialHighlight";
+import { ClickSpark } from "./components/ClickSpark";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -45,12 +46,21 @@ export default function App() {
       </AnimatePresence>
 
       <main className="relative min-h-screen w-full bg-background selection:bg-white selection:text-black">
-        {/* PERSISTENT AUDIO & LOGO TRIGGER */}
-        <AudioPlayer 
-          onReady={() => setAudioReady(true)} 
-          loading={loading} 
-          onMusicStateChange={setIsMusicPlaying} 
-        />
+        <ClickSpark
+          sparkColor="#ffffff"
+          sparkSize={12}
+          sparkRadius={20}
+          sparkCount={8}
+          duration={500}
+          easing="ease-out"
+          extraScale={1.2}
+        >
+          {/* PERSISTENT AUDIO & LOGO TRIGGER */}
+          <AudioPlayer 
+            onReady={() => setAudioReady(true)} 
+            loading={loading} 
+            onMusicStateChange={setIsMusicPlaying} 
+          />
 
         <AnimatePresence mode="wait">
           {view === 'hero' ? (
@@ -222,6 +232,7 @@ export default function App() {
           )}
         </AnimatePresence>
         <ProgressDrawer isOpen={rightOpen} setIsOpen={toggleRight} />
+        </ClickSpark>
       </main>
     </>
   );
