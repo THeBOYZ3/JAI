@@ -1,284 +1,310 @@
-import { useEffect, useRef, useState } from "react";
+import { Renderer, Program, Mesh, Triangle } from "ogl";
+import { useEffect, useRef } from "react";
 
-export function DarkGlowingWater() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const mouseRef = useRef({ x: 0.5, y: 0.5, targetX: 0.5, targetY: 0.5 });
+function hexToVec3(hex: string): [number, number, number] {
+  const h = hex.replace("#", "");
+  return [
+    parseInt(h.slice(0, 2), 16) / 255,
+    parseInt(h.slice(2, 4), 16) / 255,
+    parseInt(h.slice(4, 6), 16) / 255,
+  ];
+}
 
-  // Timing Logic: Fades in via CSS, stays for 10 seconds, fades out, stays hidden for 3 seconds, then repeats.
+const vertexShader = `
+attribute vec2 uv;
+attribute vec2 position;
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  gl_Position = vec4(position, 0, 1);
+}
+`;
+
+const fragmentShader = `
+precision highp float;
+
+uniform float uTime;
+uniform vec3 uResolution;
+uniform float uSpeed;
+uniform float uScale;
+uniform float uBrightness;
+uniform vec3 uColor1;
+uniform vec3 uColor2;
+uniform float uNoiseFreq;
+uniform float uNoiseAmp;
+uniform float uBandHeight;
+uniform float uBandSpread;
+uniform float uOctaveDecay;
+uniform float uLayerOffset;
+uniform float uColorSpeed;
+uniform vec2 uMouse;
+uniform float uMouseInfluence;
+uniform bool uEnableMouse;
+
+#define TAU 6.28318
+
+vec3 gradientHash(vec3 p) {
+  p = vec3(
+    dot(p, vec3(127.1, 311.7, 234.6)),
+    dot(p, vec3(269.5, 183.3, 198.3)),
+    dot(p, vec3(169.5, 283.3, 156.9))
+  );
+  vec3 h = fract(sin(p) * 43758.5453123);
+  float phi = acos(2.0 * h.x - 1.0);
+  float theta = TAU * h.y;
+  return vec3(cos(theta) * sin(phi), sin(theta) * cos(phi), cos(phi));
+}
+
+float quinticSmooth(float t) {
+  float t2 = t * t;
+  float t3 = t * t2;
+  return 6.0 * t3 * t2 - 15.0 * t2 * t2 + 10.0 * t3;
+}
+
+vec3 cosineGradient(float t, vec3 a, vec3 b, vec3 c, vec3 d) {
+  return a + b * cos(TAU * (c * t + d));
+}
+
+float perlin3D(float amplitude, float frequency, float px, float py, float pz) {
+  float x = px * frequency;
+  float y = py * frequency;
+
+  float fx = floor(x); float fy = floor(y); float fz = floor(pz);
+  float cx = ceil(x);  float cy = ceil(y);  float cz = ceil(pz);
+
+  vec3 g000 = gradientHash(vec3(fx, fy, fz));
+  vec3 g100 = gradientHash(vec3(cx, fy, fz));
+  vec3 g010 = gradientHash(vec3(fx, cy, fz));
+  vec3 g110 = gradientHash(vec3(cx, cy, fz));
+  vec3 g001 = gradientHash(vec3(fx, fy, cz));
+  vec3 g101 = gradientHash(vec3(cx, fy, cz));
+  vec3 g011 = gradientHash(vec3(fx, cy, cz));
+  vec3 g111 = gradientHash(vec3(cx, cy, cz));
+
+  float d000 = dot(g000, vec3(x - fx, y - fy, pz - fz));
+  float d100 = dot(g100, vec3(x - cx, y - fy, pz - fz));
+  float d010 = dot(g010, vec3(x - fx, y - cy, pz - fz));
+  float d110 = dot(g110, vec3(x - cx, y - cy, pz - fz));
+  float d001 = dot(g001, vec3(x - fx, y - fy, pz - cz));
+  float d101 = dot(g101, vec3(x - cx, y - fy, pz - cz));
+  float d011 = dot(g011, vec3(x - fx, y - cy, pz - cz));
+  float d111 = dot(g111, vec3(x - cx, y - cy, pz - cz));
+
+  float sx = quinticSmooth(x - fx);
+  float sy = quinticSmooth(y - fy);
+  float sz = quinticSmooth(pz - fz);
+
+  float lx00 = mix(d000, d100, sx);
+  float lx10 = mix(d010, d110, sx);
+  float lx01 = mix(d001, d101, sx);
+  float lx11 = mix(d011, d111, sx);
+
+  float ly0 = mix(lx00, lx10, sy);
+  float ly1 = mix(lx01, lx11, sy);
+
+  return amplitude * mix(ly0, ly1, sz);
+}
+
+float auroraGlow(float t, vec2 shift) {
+  vec2 uv = gl_FragCoord.xy / uResolution.y;
+  uv += shift;
+
+  float noiseVal = 0.0;
+  float freq = uNoiseFreq;
+  float amp = uNoiseAmp;
+  vec2 samplePos = uv * uScale;
+
+  for (float i = 0.0; i < 3.0; i += 1.0) {
+    noiseVal += perlin3D(amp, freq, samplePos.x, samplePos.y, t);
+    amp *= uOctaveDecay;
+    freq *= 2.0;
+  }
+
+  float yBand = uv.y * 10.0 - uBandHeight * 10.0;
+  return 0.3 * max(exp(uBandSpread * (1.0 - 1.1 * abs(noiseVal + yBand))), 0.0);
+}
+
+void main() {
+  vec2 uv = gl_FragCoord.xy / uResolution.xy;
+  float t = uSpeed * 0.4 * uTime;
+
+  vec2 shift = vec2(0.0);
+  if (uEnableMouse) {
+    shift = (uMouse - 0.5) * uMouseInfluence;
+  }
+
+  vec3 col = vec3(0.0);
+  col += 0.99 * auroraGlow(t, shift) * cosineGradient(uv.x + uTime * uSpeed * 0.2 * uColorSpeed, vec3(0.5), vec3(0.5), vec3(1.0), vec3(0.3, 0.20, 0.20)) * uColor1;
+  col += 0.99 * auroraGlow(t + uLayerOffset, shift) * cosineGradient(uv.x + uTime * uSpeed * 0.1 * uColorSpeed, vec3(0.5), vec3(0.5), vec3(2.0, 1.0, 0.0), vec3(0.5, 0.20, 0.25)) * uColor2;
+
+  col *= uBrightness;
+  float alpha = clamp(length(col), 0.0, 1.0);
+  gl_FragColor = vec4(col, alpha);
+}
+`;
+
+export interface DarkGlowingWaterProps {
+  speed?: number;
+  scale?: number;
+  brightness?: number;
+  color1?: string;
+  color2?: string;
+  noiseFrequency?: number;
+  noiseAmplitude?: number;
+  bandHeight?: number;
+  bandSpread?: number;
+  octaveDecay?: number;
+  layerOffset?: number;
+  colorSpeed?: number;
+  enableMouseInteraction?: boolean;
+  mouseInfluence?: number;
+}
+
+export function DarkGlowingWater({
+  speed = 0.6,
+  scale = 1.5,
+  brightness = 1.0,
+  color1 = "#f7f7f7",
+  color2 = "#0300ff",
+  noiseFrequency = 2.5,
+  noiseAmplitude = 1.0,
+  bandHeight = 0.5,
+  bandSpread = 1.0,
+  octaveDecay = 0.1,
+  layerOffset = 0,
+  colorSpeed = 1.0,
+  enableMouseInteraction = true,
+  mouseInfluence = 0.25,
+}: DarkGlowingWaterProps) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
-    let isMounted = true;
-    let timeoutId: NodeJS.Timeout;
+    if (!containerRef.current) return;
+    const container = containerRef.current;
+    const renderer = new Renderer({ alpha: true, premultipliedAlpha: false });
+    const gl = renderer.gl;
+    gl.clearColor(0, 0, 0, 0);
 
-    const cycleVisibility = () => {
-      if (!isMounted) return;
-      // Fade in to 100% visibility (takes 1.5s configured in CSS transitions)
-      setIsVisible(true);
+    let program: Program;
+    let currentMouse = [0.5, 0.5];
+    let targetMouse = [0.5, 0.5];
 
-      // Remain visible for 10 seconds
-      timeoutId = setTimeout(() => {
-        if (!isMounted) return;
-        // Fade out to 0% visibility
-        setIsVisible(false);
-
-        // Remain hidden / pitch black for 3 seconds before starting again
-        timeoutId = setTimeout(() => {
-          cycleVisibility();
-        }, 3000);
-      }, 10000);
-    };
-
-    cycleVisibility();
-
-    return () => {
-      isMounted = false;
-      clearTimeout(timeoutId);
-    };
-  }, []);
-
-  // WebGL Pipeline Setup and Render Loop
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const gl = canvas.getContext("webgl") || (canvas.getContext("experimental-webgl") as WebGLRenderingContext | null);
-    if (!gl) {
-      console.warn("WebGL is not supported in this browser environment.");
-      return;
+    function handleMouseMove(e: MouseEvent) {
+      const rect = gl.canvas.getBoundingClientRect();
+      targetMouse = [
+        (e.clientX - rect.left) / rect.width,
+        1.0 - (e.clientY - rect.top) / rect.height,
+      ];
     }
 
-    // Vertex Shader: full scren quad
-    const vsSource = `
-      attribute vec2 position;
-      void main() {
-        gl_Position = vec4(position, 0.0, 1.0);
-      }
-    `;
-
-    // Fragment Shader: Custom Fractional Brownian Motion and Caustic Silky Wave Simulation
-    const fsSource = `
-      precision highp float;
-      uniform vec2 u_resolution;
-      uniform float u_time;
-      uniform vec2 u_mouse;
-
-      // Hash function
-      float hash(vec2 p) {
-        return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
-      }
-
-      // Simple 2D Value Noise
-      float noise(vec2 p) {
-        vec2 i = floor(p);
-        vec2 f = fract(p);
-        vec2 u = f * f * (3.0 - 2.0 * f);
-        return mix(mix(hash(i + vec2(0.0, 0.0)), hash(i + vec2(1.0, 0.0)), u.x),
-                   mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
-      }
-
-      // 4-Octave fBm (Fractional Brownian Motion)
-      float fbm(vec2 p) {
-        float v = 0.0;
-        float a = 0.5;
-        vec2 shift = vec2(100.0);
-        float c = cos(0.5);
-        float s = sin(0.5);
-        mat2 r = mat2(c, -s, s, c);
-        for (int i = 0; i < 4; i++) {
-          v += a * noise(p);
-          p = r * p * 2.0 + shift;
-          a *= 0.5;
-        }
-        return v;
-      }
-
-      // Fluid water caustic generator
-      float caustics(vec2 p, float time, vec2 mouseWarp) {
-        vec2 q = vec2(0.0);
-        q.x = fbm(p + 0.1 * time);
-        q.y = fbm(p + vec2(1.0));
-
-        vec2 r = vec2(0.0);
-        r.x = fbm(p + 1.2 * q + vec2(1.7, 9.2) + 0.14 * time + mouseWarp * 0.4);
-        r.y = fbm(p + 1.2 * q + vec2(8.3, 2.8) + 0.09 * time + mouseWarp * 0.4);
-
-        // Fluid peaks calculation (high-contrast absolute noise ridge)
-        float f = fbm(p + 1.5 * r);
-        float peak = 1.0 - abs(f);
-
-        // High-contrast exponentiation makes the wave crest sharp and silky
-        return pow(peak, 6.0) * 2.2;
-      }
-
-      void main() {
-        // Normalized and aspect-ratio corrected fragment positions
-        vec2 p = (gl_FragCoord.xy * 2.0 - u_resolution.xy) / min(u_resolution.x, u_resolution.y);
-
-        // Correct mouse coordinate spacing to match fragment screen space
-        vec2 m = (u_mouse * 2.0 - 1.0) * (u_resolution.xy / min(u_resolution.x, u_resolution.y));
-        m.y = -m.y; // Match screen space coordinates to WebGL inverse geometry Y
-
-        // Interactive mouse repellent warp
-        vec2 mouseWarp = vec2(0.0);
-        float dist = length(p - m);
-        if (dist < 0.9) {
-          float strength = 1.0 - smoothstep(0.0, 0.9, dist);
-          // Push away water wavefronts
-          mouseWarp = normalize(p - m) * strength * 0.75;
-        }
-
-        // Combine scrolling frequencies for richer motion depths
-        float c1 = caustics(p * 2.2 + mouseWarp * 1.4, u_time * 0.6, mouseWarp);
-        float c2 = caustics(p * 3.8 - mouseWarp * 0.8, u_time * 1.0 + 12.0, -mouseWarp);
-
-        float waves = c1 * 0.6 + c2 * 0.4;
-
-        // Smooth contrast clipping to keep valleys absolutely black
-        waves = smoothstep(0.04, 0.8, waves);
-
-        // Elegant, silver/white glowing sheen colors
-        vec3 finalColor = vec3(waves * 0.92, waves * 0.94, waves * 0.98);
-
-        // Overexposure peaks sheen brightness
-        finalColor += vec3(0.45) * pow(waves, 7.0);
-
-        // Slight ambient bluish dark tint for valleys without fully breaking the black backdrop
-        finalColor += vec3(0.005, 0.008, 0.012) * (1.0 - waves);
-
-        gl_FragColor = vec4(finalColor, 1.0);
-      }
-    `;
-
-    // Shader compiler helper function
-    const compileShader = (type: number, source: string) => {
-      const shader = gl.createShader(type);
-      if (!shader) return null;
-      gl.shaderSource(shader, source);
-      gl.compileShader(shader);
-      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error("Shader compiler failed:", gl.getShaderInfoLog(shader));
-        gl.deleteShader(shader);
-        return null;
-      }
-      return shader;
-    };
-
-    const vertexShader = compileShader(gl.VERTEX_SHADER, vsSource);
-    const fragmentShader = compileShader(gl.FRAGMENT_SHADER, fsSource);
-    if (!vertexShader || !fragmentShader) return;
-
-    // Link WebGL program
-    const program = gl.createProgram();
-    if (!program) return;
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
-    gl.linkProgram(program);
-
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      console.error("Shader linking failed:", gl.getProgramInfoLog(program));
-      return;
+    function handleMouseLeave() {
+      targetMouse = [0.5, 0.5];
     }
 
-    gl.useProgram(program);
-
-    // Bind full screen canvas vertex quad buffer
-    const positionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    const positions = [
-      -1.0, -1.0,
-       1.0, -1.0,
-      -1.0,  1.0,
-      -1.0,  1.0,
-       1.0, -1.0,
-       1.0,  1.0,
-    ];
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-
-    const positionAttribute = gl.getAttribLocation(program, "position");
-    gl.enableVertexAttribArray(positionAttribute);
-    gl.vertexAttribPointer(positionAttribute, 2, gl.FLOAT, false, 0, 0);
-
-    // Cache WebGL Shader uniform locations
-    const uResolution = gl.getUniformLocation(program, "u_resolution");
-    const uTime = gl.getUniformLocation(program, "u_time");
-    const uMouse = gl.getUniformLocation(program, "u_mouse");
-
-    const startTime = Date.now();
-
-    // Responsive Canvas Resize logic
-    const resizeCanvas = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2); // Capped at double-resolution to ensure performance
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-
-      gl.viewport(0, 0, canvas.width, canvas.height);
-    };
-
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
-
-    // Mouse & Touch Interaction tracking
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current.targetX = e.clientX / window.innerWidth;
-      mouseRef.current.targetY = e.clientY / window.innerHeight;
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches[0]) {
-        mouseRef.current.targetX = e.touches[0].clientX / window.innerWidth;
-        mouseRef.current.targetY = e.touches[0].clientY / window.innerHeight;
+    function resize() {
+      if (!container) return;
+      renderer.setSize(container.offsetWidth, container.offsetHeight);
+      if (program) {
+        program.uniforms.uResolution.value = [
+          gl.canvas.width,
+          gl.canvas.height,
+          gl.canvas.width / gl.canvas.height,
+        ];
       }
-    };
+    }
+    window.addEventListener("resize", resize);
+    resize();
 
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("touchmove", handleTouchMove, { passive: true });
+    const geometry = new Triangle(gl);
+    program = new Program(gl, {
+      vertex: vertexShader,
+      fragment: fragmentShader,
+      uniforms: {
+        uTime: { value: 0 },
+        uResolution: {
+          value: [
+            gl.canvas.width,
+            gl.canvas.height,
+            gl.canvas.width / gl.canvas.height,
+          ],
+        },
+        uSpeed: { value: speed },
+        uScale: { value: scale },
+        uBrightness: { value: brightness },
+        uColor1: { value: hexToVec3(color1) },
+        uColor2: { value: hexToVec3(color2) },
+        uNoiseFreq: { value: noiseFrequency },
+        uNoiseAmp: { value: noiseAmplitude },
+        uBandHeight: { value: bandHeight },
+        uBandSpread: { value: bandSpread },
+        uOctaveDecay: { value: octaveDecay },
+        uLayerOffset: { value: layerOffset },
+        uColorSpeed: { value: colorSpeed },
+        uMouse: { value: new Float32Array([0.5, 0.5]) },
+        uMouseInfluence: { value: mouseInfluence },
+        uEnableMouse: { value: enableMouseInteraction },
+      },
+    });
 
-    let animationId: number;
+    const mesh = new Mesh(gl, { geometry, program });
+    container.appendChild(gl.canvas);
 
-    const renderLoop = () => {
-      const timeInSecs = (Date.now() - startTime) * 0.001;
+    if (enableMouseInteraction) {
+      gl.canvas.addEventListener("mousemove", handleMouseMove);
+      gl.canvas.addEventListener("mouseleave", handleMouseLeave);
+    }
 
-      // Soft interpolation on mouse vector to create smooth drifting trails
-      const m = mouseRef.current;
-      m.x += (m.targetX - m.x) * 0.08;
-      m.y += (m.targetY - m.y) * 0.08;
+    let animationFrameId: number;
 
-      gl.uniform2f(uResolution, canvas.width, canvas.height);
-      gl.uniform1f(uTime, timeInSecs);
-      gl.uniform2f(uMouse, m.x, m.y);
+    function update(time: number) {
+      animationFrameId = requestAnimationFrame(update);
+      program.uniforms.uTime.value = time * 0.001;
 
-      // Direct full screen rasterization
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
+      if (enableMouseInteraction) {
+        currentMouse[0] += 0.05 * (targetMouse[0] - currentMouse[0]);
+        currentMouse[1] += 0.05 * (targetMouse[1] - currentMouse[1]);
+        program.uniforms.uMouse.value[0] = currentMouse[0];
+        program.uniforms.uMouse.value[1] = currentMouse[1];
+      } else {
+        program.uniforms.uMouse.value[0] = 0.5;
+        program.uniforms.uMouse.value[1] = 0.5;
+      }
 
-      animationId = requestAnimationFrame(renderLoop);
-    };
-
-    renderLoop();
+      renderer.render({ scene: mesh });
+    }
+    animationFrameId = requestAnimationFrame(update);
 
     return () => {
-      window.removeEventListener("resize", resizeCanvas);
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("touchmove", handleTouchMove);
-      cancelAnimationFrame(animationId);
-      gl.deleteBuffer(positionBuffer);
-      gl.deleteProgram(program);
-      gl.deleteShader(vertexShader);
-      gl.deleteShader(fragmentShader);
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener("resize", resize);
+      if (enableMouseInteraction) {
+        gl.canvas.removeEventListener("mousemove", handleMouseMove);
+        gl.canvas.removeEventListener("mouseleave", handleMouseLeave);
+      }
+      container.removeChild(gl.canvas);
+      gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
-  }, []);
+  }, [
+    speed,
+    scale,
+    brightness,
+    color1,
+    color2,
+    noiseFrequency,
+    noiseAmplitude,
+    bandHeight,
+    bandSpread,
+    octaveDecay,
+    layerOffset,
+    colorSpeed,
+    enableMouseInteraction,
+    mouseInfluence,
+  ]);
 
   return (
-    <canvas
-      id="waterCanvas"
-      ref={canvasRef}
-      className={`fixed top-0 left-0 w-full h-full pointer-events-none transition-opacity duration-[1500ms] ease-in-out ${
-        isVisible ? "opacity-100" : "opacity-0"
-      }`}
+    <div
+      ref={containerRef}
+      className="fixed top-0 left-0 w-full h-full pointer-events-none"
       style={{ zIndex: 1 }}
     />
   );
